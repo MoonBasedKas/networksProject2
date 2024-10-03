@@ -20,11 +20,11 @@ class frame:
     Debugging method will print out a packet.
     """
     def __str__(self):
-        str = "{} -> {} \t size: {}\n{}".format(self.srcBin, self.srcInt, self.sizeInt, self.messageChar)
+        str = "{} -> {} \t size: {}\n{}".format(self.srcInt, self.destInt, self.sizeInt, self.messageChar)
         return str
 
     """
-    Builds the frame if it was built at the node.
+    Builds the frame if it was built at the node. Given ints
     """
     def buildIntWise(self, data):
         self.srcInt = data[0]
@@ -54,25 +54,12 @@ class frame:
         self.sizeInt = self.binToInt(self.sizeBin)
         self.messageChar = self.messageToChar(self.charsBin)
 
-
-    """
-    Converts the frame class into an actual frame to send.
-    """
-    def packetize(self):
-        message = ""
-        message += self.srcBin
-        message += self.destBin
-        message += self.sizeBin
-        for i in self.charsBin:
-            message += i
-        return message
-
     """
     This will be used to convert a frame into a byte stream.
     """
     def messagify(self):
         str = self.srcBin + self.destBin + self.sizeBin
-        for i in self.messageChar:
+        for i in self.messageBin:
             str += i
         return str
 
@@ -96,7 +83,7 @@ class frame:
         sum = 0
         for i in range(0,8):
             if num[i] == "1":
-                sum += 2**i
+                sum += 2**(7 - i)
         return sum
     
     """
@@ -108,7 +95,7 @@ class frame:
         while message != "":
             temp = message[0:8]
             message = message[8:]
-            res += ascii(self.binToInt(temp))
+            res += chr(self.binToInt(temp))
         return res
     
     """
@@ -120,10 +107,3 @@ class frame:
             lis.append(self.intToBinary(ord(char)))
 
         return lis
-
-
-x = frame([1, 2, 3, ""])
-print(x)
-z = frame(x.messagify())
-print(z)
-print(z.srcBin)
