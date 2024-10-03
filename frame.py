@@ -1,4 +1,8 @@
 """
+Name: Kassidy Maberry
+Project:
+Date:
+
 Implementation of the frame class. This is used as a container 
 for handling the information of a packet and for preparing 
 the packet for when its sent.
