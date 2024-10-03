@@ -17,6 +17,13 @@ class frame:
             self.buildBitWise(data) # String Input
 
     """
+    Debugging method will print out a packet.
+    """
+    def __str__(self):
+        str = "{} -> {} \t size: {}\n{}".format(self.srcBin, self.srcInt, self.sizeInt, self.messageChar)
+        return str
+
+    """
     Builds the frame if it was built at the node.
     """
     def buildIntWise(self, data):
@@ -27,14 +34,14 @@ class frame:
         self.srcBin = self.intToBinary(data[0])
         self.destBin = self.intToBinary(data[1])
         self.sizeBin = self.intToBinary(data[2])
-        self.charsBin = self.messageToBinary(data[3])
+        self.messageBin = self.messageToBinary(data[3])
 
     """
     Builds the node if it was recieved at the bit level.
     """
-    def buildBitWise(self, src, dest, size, message):
+    def buildBitWise(self, data):
         # Takes the first 8 bits of scratch then remove it.
-        scratch = message
+        scratch = data
         self.srcBin = scratch[0:8] 
         scratch = scratch[8:]
         self.destBin = scratch
@@ -45,7 +52,7 @@ class frame:
         self.srcInt = self.binToInt(self.srcBin)
         self.destInt = self.binToInt(self.destBin)
         self.sizeInt = self.binToInt(self.sizeBin)
-        self.charsStr = self.messageToChar(self.charsBin)
+        self.messageChar = self.messageToChar(self.charsBin)
 
 
     """
@@ -65,7 +72,7 @@ class frame:
     """
     def messagify(self):
         str = self.srcBin + self.destBin + self.sizeBin
-        for i in self.charsBin:
+        for i in self.messageChar:
             str += i
         return str
 
@@ -114,3 +121,9 @@ class frame:
 
         return lis
 
+
+x = frame([1, 2, 3, ""])
+print(x)
+z = frame(x.messagify())
+print(z)
+print(z.srcBin)
