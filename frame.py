@@ -9,11 +9,56 @@ the packet for when its sent.
 """
 
 class frame:
-    def __init__(self, src, dest, size, message) -> None:
-        self.srcBin = self.intToBinary(src)
-        self.destBin = self.intToBinary(dest)
-        self.sizeBin = self.intToBinary(size)
-        self.charsBin = self.messageToBinary(message)
+    def __init__(self, data) -> None:
+        # This is a type of psuedo overloading since python does not support it
+        if type(data) == type([]):
+            self.buildIntWise(data) # List input
+        else:
+            self.buildBitWise(data) # String Input
+
+    """
+    Builds the frame if it was built at the node.
+    """
+    def buildIntWise(self, data):
+        self.srcInt = data[0]
+        self.destInt = data[1]
+        self.sizeInt = data[2]
+        self.messageChar = data[3]
+        self.srcBin = self.intToBinary(data[0])
+        self.destBin = self.intToBinary(data[1])
+        self.sizeBin = self.intToBinary(data[2])
+        self.charsBin = self.messageToBinary(data[3])
+
+    """
+    Builds the node if it was recieved at the bit level.
+    """
+    def buildBitWise(self, src, dest, size, message):
+        # Takes the first 8 bits of scratch then remove it.
+        scratch = message
+        self.srcBin = scratch[0:8] 
+        scratch = scratch[8:]
+        self.destBin = scratch
+        scratch = scratch[8:]
+        self.sizeBin = scratch
+        scratch = scratch[8:]
+        self.charsBin = scratch
+        self.srcInt = self.binToInt(self.srcBin)
+        self.destInt = self.binToInt(self.destBin)
+        self.sizeInt = self.binToInt(self.sizeBin)
+        self.charsStr = self.messageToChar(self.charsBin)
+
+
+    """
+    Converts the frame class into an actual frame to send.
+    """
+    def packetize(self):
+        message = ""
+        message += self.srcBin
+        message += self.destBin
+        message += self.sizeBin
+        for i in self.charsBin:
+            message += i
+        return message
 
     """
     This will be used to convert a frame into a byte stream.
@@ -38,6 +83,28 @@ class frame:
         return ans
     
     """
+    Convert a binary number into a base 10 number.
+    """
+    def binToInt(self, num):
+        sum = 0
+        for i in range(0,8):
+            if num[i] == "1":
+                sum += 2**i
+        return sum
+    
+    """
+    Converts a message into characters.
+    """
+    def messageToChar(self, message):
+        temp = ""
+        res = ""
+        while message != "":
+            temp = message[0:8]
+            message = message[8:]
+            res += ascii(self.binToInt(temp))
+        return res
+    
+    """
     Converts a given string of characters into binary.
     """
     def messageToBinary(self, message):
@@ -46,3 +113,4 @@ class frame:
             lis.append(self.intToBinary(ord(char)))
 
         return lis
+
