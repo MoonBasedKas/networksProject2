@@ -10,7 +10,6 @@ the packet for when its sent.
 
 class frame:
     def __init__(self, src, dest, size, message) -> None:
-        parts = [] 
         self.srcBin = self.intToBinary(src)
         self.destBin = self.intToBinary(dest)
         self.sizeBin = self.intToBinary(size)
