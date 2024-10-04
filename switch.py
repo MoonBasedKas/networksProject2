@@ -45,7 +45,7 @@ class switch:
     def monitorConnects(self):
         readableConnections = []
         while True:
-            readableConnections = select.select(self.connections, [], [])
+            readableConnections = select.select(self.connections, self.connections, self.connections)
             for z in readableConnections:
                 msg = z[0].recv(128).decode("ascii")
                 print("Node recieved: " + msg.strip(), end="\n")
