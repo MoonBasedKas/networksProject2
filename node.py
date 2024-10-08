@@ -12,7 +12,7 @@ import socket
 
 class node:
 
-    def __init__(self) -> None:
+    def __init__(self, name) -> None:
         self.port = None
         self.messages = None
         self.nodeName = 0
