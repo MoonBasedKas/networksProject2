@@ -13,8 +13,9 @@ import socket
 class node:
 
     def __init__(self, name) -> None:
-        self.port = None
-        self.messages = None
-        self.nodeName = 0
+        self.port = int(name)
+        self.nodeName = str(name)
+        self.fInput = open("./nodeInput/node" + self.nodeName, "r")
+        self.messages = self.fInput.readlines()
 
     
